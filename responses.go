@@ -42,3 +42,62 @@ type VaReportData struct {
 	TellerId    string `json:"tellerid"`
 	AccountNo   string `json:"no_rek"`
 }
+
+// CardTokenOTPResponse defines response for direct debit - create card token OTP
+type CardTokenOTPResponse struct {
+	Body CardTokenOTPResponseData `json:"body"`
+}
+
+// CardTokenOTPResponseData defines data response for direct debit - create card token OTP
+type CardTokenOTPResponseData struct {
+	Status string `json:"status"`
+	Token  string `json:"token"`
+}
+
+// CardTokenOTPVerifyResponse defines response for direct debit - create card token OTP verify
+type CardTokenOTPVerifyResponse struct {
+	Body CardTokenOTPVerifyResponseData `json:"body"`
+}
+
+// CardTokenOTPVerifyResponseData defines data response for direct debit - create card token OTP verify
+type CardTokenOTPVerifyResponseData struct {
+	Status           string                 `json:"status"`
+	PhoneNumber      string                 `json:"phone_number"`
+	DeviceID         string                 `json:"device_id"`
+	CardToken        string                 `json:"card_token"`
+	Location         Location               `json:"location"`
+	Last4            string                 `json:"last4"`
+	Email            string                 `json:"email"`
+	CardType         string                 `json:"card_type"`
+	LimitTransaction string                 `json:"limit_transaction"`
+	Metadata         map[string]interface{} `json:"metadata"`
+}
+
+// PaymentChargeOTPResponse defines response for direct debit - create payment charge OTP
+type PaymentChargeOTPResponse struct {
+	Body PaymentChargeOTPResponseData `json:"body"`
+}
+
+// PaymentChargeOTPResponseData defines data response for direct debit - create payment charge OTP
+type PaymentChargeOTPResponseData struct {
+	ChargeToken string `json:"charge_token"`
+	Status      string `json:"status"`
+}
+
+// PaymentChargeOTPVerifyResponse defines response for direct debit - create payment charge OTP verify
+type PaymentChargeOTPVerifyResponse struct {
+	Body PaymentChargeOTPResponseData `json:"body"`
+}
+
+// PaymentChargeOTPVerifyResponseData defines data response for direct debit - create payment charge OTP verify
+type PaymentChargeOTPVerifyResponseData struct {
+	Status        string                 `json:"status"`
+	PaymentID     string                 `json:"payment_id"`
+	Amount        string                 `json:"amount"`
+	Currency      string                 `json:"currency"`
+	Remarks       string                 `json:"remarks"`
+	DeviceID      string                 `json:"device_id"`
+	PaymentStatus string                 `json:"payment_status"`
+	Location      Location               `json:"location"`
+	Metadata      map[string]interface{} `json:"metadata"`
+}
