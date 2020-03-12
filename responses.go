@@ -46,6 +46,7 @@ type VaReportData struct {
 // CardTokenOTPResponse defines response for direct debit - create card token OTP
 type CardTokenOTPResponse struct {
 	Body CardTokenOTPResponseData `json:"body"`
+	ErrorResponse
 }
 
 // CardTokenOTPResponseData defines data response for direct debit - create card token OTP
@@ -57,6 +58,7 @@ type CardTokenOTPResponseData struct {
 // CardTokenOTPVerifyResponse defines response for direct debit - create card token OTP verify
 type CardTokenOTPVerifyResponse struct {
 	Body CardTokenOTPVerifyResponseData `json:"body"`
+	ErrorResponse
 }
 
 // CardTokenOTPVerifyResponseData defines data response for direct debit - create card token OTP verify
@@ -73,25 +75,59 @@ type CardTokenOTPVerifyResponseData struct {
 	Metadata         map[string]interface{} `json:"metadata"`
 }
 
-// PaymentChargeOTPResponse defines response for direct debit - create payment charge OTP
-type PaymentChargeOTPResponse struct {
-	Body PaymentChargeOTPResponseData `json:"body"`
+// ErrorResponse defines response data if error request.Example:
+// {
+//     "error": {
+//         "code": "0920",
+//         "message": "Expired OTP"
+//     },
+//     "status_code": 400,
+//     "status": {
+//         "code": "0602",
+//         "desc": "Invalid signature"
+//     },
+//     "recorded_at": "2020-03-12T03:58:46Z"
+// }
+type ErrorResponse struct {
+	Error      ErrorDetail `json:"error"`
+	StatusCode int         `json:"status_code"`
+	Status     ErrorStatus `json:"status"`
 }
 
-// PaymentChargeOTPResponseData defines data response for direct debit - create payment charge OTP
-type PaymentChargeOTPResponseData struct {
-	ChargeToken string `json:"charge_token"`
-	Status      string `json:"status"`
+// ErrorDetail defines response error detail. Example:
+// {
+//     "error": {
+//         "code": "0920",
+//         "message": "Expired OTP"
+//     }
+// }
+type ErrorDetail struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
 }
 
-// PaymentChargeOTPVerifyResponse defines response for direct debit - create payment charge OTP verify
-type PaymentChargeOTPVerifyResponse struct {
-	Body PaymentChargeOTPResponseData `json:"body"`
+// ErrorStatus defines error data if unauthorized. Example:
+// {
+//     "status": {
+//         "code": "0602",
+//         "desc": "Invalid signature"
+//     }
+// }
+type ErrorStatus struct {
+	Code string `json:"code"`
+	Desc string `json:"desc"`
 }
 
-// PaymentChargeOTPVerifyResponseData defines data response for direct debit - create payment charge OTP verify
-type PaymentChargeOTPVerifyResponseData struct {
+// PaymentChargeResponse defines response for direct debit - create payment charge [using OTP or not]
+type PaymentChargeResponse struct {
+	Body PaymentChargeResponseData `json:"body"`
+	ErrorResponse
+}
+
+// PaymentChargeResponseData defines data response for direct debit - create payment charge [using OTP or not]
+type PaymentChargeResponseData struct {
 	Status        string                 `json:"status"`
+	ChargeToken   string                 `json:"charge_token"`
 	PaymentID     string                 `json:"payment_id"`
 	Amount        string                 `json:"amount"`
 	Currency      string                 `json:"currency"`

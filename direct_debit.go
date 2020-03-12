@@ -56,7 +56,7 @@ func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVer
 
 // CreatePaymentChargeOTP is used for payment of direct link transactions based on card number via card_token acquired from binding process (create a card token).
 // This API will alse send OTP code confirmation to user if user phonenumber is valid.
-func (g *CoreGateway) CreatePaymentChargeOTP(token string, req PaymentChargeOTPRequest) (res PaymentChargeOTPResponse, err error) {
+func (g *CoreGateway) CreatePaymentChargeOTP(token string, req PaymentChargeOTPRequest) (res PaymentChargeResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPost
 	body, err := json.Marshal(req)
@@ -75,7 +75,7 @@ func (g *CoreGateway) CreatePaymentChargeOTP(token string, req PaymentChargeOTPR
 }
 
 // CreatePaymentChargeOTPVerify is used to verify OTP from create payment charge OTP url.
-func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChargeOTPVerifyRequest) (res PaymentChargeOTPVerifyResponse, err error) {
+func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChargeOTPVerifyRequest) (res PaymentChargeResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPost
 	body, err := json.Marshal(req)
