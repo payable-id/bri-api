@@ -15,7 +15,7 @@ const (
 
 // CreateCardTokenOTP verifies that the information provided by the customers matches the bank data.
 // This API will alse send OTP code confirmation to user if user phonenumber is valid.
-func (g *CoreGateway) CreateCardTokenOTP(token string, req CardTokenOTPRequest) (res CardTokenOTPResponse, err error) {
+func (g *CoreGateway) CreateCardTokenOTP(token, briAPIKey string, req CardTokenOTPRequest) (res CardTokenOTPResponse, err error) {
 	req.Body.OtpBriStatus = "YES"
 
 	token = "Bearer " + token
@@ -25,10 +25,11 @@ func (g *CoreGateway) CreateCardTokenOTP(token string, req CardTokenOTPRequest) 
 	signature := generateSignature(urlCreateCardTokenOTP, method, token, timestamp, string(body), g.Client.ClientSecret)
 
 	headers := map[string]string{
-		"Authorization": token,
-		"BRI-Timestamp": timestamp,
-		"BRI-Signature": signature,
-		"Content-Type":  "application/json",
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"X-BRI-Api-Key":   briAPIKey,
 	}
 
 	err = g.Call(method, urlCreateCardTokenOTP, headers, strings.NewReader(string(body)), &res)
@@ -36,7 +37,7 @@ func (g *CoreGateway) CreateCardTokenOTP(token string, req CardTokenOTPRequest) 
 }
 
 // CreateCardTokenOTPVerify is used to verify OTP from create card token OTP url.
-func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVerifyRequest) (res CardTokenOTPVerifyResponse, err error) {
+func (g *CoreGateway) CreateCardTokenOTPVerify(token, briAPIKey string, req CardTokenOTPVerifyRequest) (res CardTokenOTPVerifyResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPatch
 	body, err := json.Marshal(req)
@@ -44,10 +45,11 @@ func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVer
 	signature := generateSignature(urlCreateCardTokenOTPVerify, method, token, timestamp, string(body), g.Client.ClientSecret)
 
 	headers := map[string]string{
-		"Authorization": token,
-		"BRI-Timestamp": timestamp,
-		"BRI-Signature": signature,
-		"Content-Type":  "application/json",
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"X-BRI-Api-Key":   briAPIKey,
 	}
 
 	err = g.Call(method, urlCreateCardTokenOTPVerify, headers, strings.NewReader(string(body)), &res)
@@ -56,7 +58,7 @@ func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVer
 
 // CreatePaymentChargeOTP is used for payment of direct link transactions based on card number via card_token acquired from binding process (create a card token).
 // This API will alse send OTP code confirmation to user if user phonenumber is valid.
-func (g *CoreGateway) CreatePaymentChargeOTP(token, idempotencyKey string, req PaymentChargeOTPRequest) (res PaymentChargeResponse, err error) {
+func (g *CoreGateway) CreatePaymentChargeOTP(token, briAPIKey, idempotencyKey string, req PaymentChargeOTPRequest) (res PaymentChargeResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPost
 	body, err := json.Marshal(req)
@@ -66,9 +68,10 @@ func (g *CoreGateway) CreatePaymentChargeOTP(token, idempotencyKey string, req P
 	headers := map[string]string{
 		"Authorization":   token,
 		"BRI-Timestamp":   timestamp,
-		"BRI-Signature":   signature,
+		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
 		"Idempotency-Key": idempotencyKey,
+		"X-BRI-Api-Key":   briAPIKey,
 	}
 
 	err = g.Call(method, urlCreatePaymentChargeOTP, headers, strings.NewReader(string(body)), &res)
@@ -76,7 +79,7 @@ func (g *CoreGateway) CreatePaymentChargeOTP(token, idempotencyKey string, req P
 }
 
 // CreatePaymentChargeOTPVerify is used to verify OTP from create payment charge OTP url.
-func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChargeOTPVerifyRequest) (res PaymentChargeResponse, err error) {
+func (g *CoreGateway) CreatePaymentChargeOTPVerify(token, briAPIKey string, req PaymentChargeOTPVerifyRequest) (res PaymentChargeResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPost
 	body, err := json.Marshal(req)
@@ -84,10 +87,11 @@ func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChar
 	signature := generateSignature(urlCreatePaymentChargeOTPVerify, method, token, timestamp, string(body), g.Client.ClientSecret)
 
 	headers := map[string]string{
-		"Authorization": token,
-		"BRI-Timestamp": timestamp,
-		"BRI-Signature": signature,
-		"Content-Type":  "application/json",
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"X-BRI-Api-Key":   briAPIKey,
 	}
 
 	err = g.Call(method, urlCreatePaymentChargeOTPVerify, headers, strings.NewReader(string(body)), &res)
