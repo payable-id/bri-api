@@ -1,12 +1,30 @@
 package bri
 
 import (
+	"crypto/sha1"
 	"fmt"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
+// generateSha1Timestamp will generate sha1 hash from UnixNano timestamp
+func generateSha1Timestamp(salt string) string {
+	key := fmt.Sprintf("%s-%d", salt, time.Now().UnixNano())
+
+	h := sha1.New()
+	h.Write([]byte(key))
+	return fmt.Sprintf("%x", h.Sum(nil))
+}
+
 func (bri *BriSanguTestSuite) TestDirectDebit_01_CreateCardToken() {
+	// modify url for unit test
+	urlCreateCardTokenOTP = fmt.Sprintf("/sandbox%s", urlCreateCardTokenOTP)
+	urlCreateCardTokenOTPVerify = fmt.Sprintf("/sandbox%s", urlCreateCardTokenOTPVerify)
+	urlCreatePaymentChargeOTP = fmt.Sprintf("/sandbox%s", urlCreatePaymentChargeOTP)
+	urlCreatePaymentChargeOTPVerify = fmt.Sprintf("/sandbox%s", urlCreatePaymentChargeOTPVerify)
+	urlDeleteCardToken = fmt.Sprintf("/sandbox%s", urlDeleteCardToken)
+
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
@@ -22,8 +40,6 @@ func (bri *BriSanguTestSuite) TestDirectDebit_01_CreateCardToken() {
 	}
 
 	token := tokenResp.AccessToken
-	urlCreateCardTokenOTP = fmt.Sprintf("/sandbox%s", urlCreateCardTokenOTP)
-
 	resp, err := coreGateway.CreateCardTokenOTP(token, req)
 
 	assert.Equal(bri.T(), "PENDING_USER_VERIFICATION", resp.Body.Status)
@@ -46,8 +62,6 @@ func (bri *BriSanguTestSuite) TestDirectDebit_02_VerifyCreateCardToken() {
 	}
 
 	token := tokenResp.AccessToken
-	urlCreateCardTokenOTPVerify = fmt.Sprintf("/sandbox%s", urlCreateCardTokenOTPVerify)
-
 	resp, err := coreGateway.CreateCardTokenOTPVerify(token, req)
 
 	assert.Equal(bri.T(), "0000", resp.Body.Status)
@@ -77,8 +91,6 @@ func (bri *BriSanguTestSuite) TestDirectDebit_03_ChargePaymentNoOTP() {
 	}
 
 	token := tokenResp.AccessToken
-	urlCreatePaymentChargeOTP = fmt.Sprintf("/sandbox%s", urlCreatePaymentChargeOTP)
-
 	resp, err := coreGateway.CreatePaymentChargeOTP(token, idempotencyKey, req)
 
 	assert.Equal(bri.T(), "0000", resp.Body.Status)
@@ -130,8 +142,6 @@ func (bri *BriSanguTestSuite) TestDirectDebit_05_VerifyChargePaymentOTP() {
 	}
 
 	token := tokenResp.AccessToken
-	urlCreatePaymentChargeOTPVerify = fmt.Sprintf("/sandbox%s", urlCreatePaymentChargeOTPVerify)
-
 	resp, err := coreGateway.CreatePaymentChargeOTPVerify(token, req)
 
 	assert.Equal(bri.T(), "0000", resp.Body.Status)
@@ -152,7 +162,6 @@ func (bri *BriSanguTestSuite) TestDirectDebit_06_DeleteCardToken() {
 	}
 
 	token := tokenResp.AccessToken
-	urlDeleteCardToken = fmt.Sprintf("/sandbox%s", urlDeleteCardToken)
 	resp, err := coreGateway.DeleteCardToken(token, req)
 
 	assert.Equal(bri.T(), "0000", resp.Body.Status)
