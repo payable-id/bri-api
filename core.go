@@ -30,6 +30,16 @@ func (gateway *CoreGateway) Call(method, path string, header map[string]string, 
 	return gateway.Client.Call(method, path, header, body, v)
 }
 
+// CallDirectDebit will call direct debit api
+func (gateway *CoreGateway) CallDirectDebit(method, path string, header map[string]string, body io.Reader, v interface{}) error {
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
+
+	path = gateway.Client.DirectDebitBaseURL + path
+	return gateway.Client.Call(method, path, header, body, v)
+}
+
 func (gateway *CoreGateway) GetToken() (res TokenResponse, err error) {
 	data := url.Values{}
 	data.Set("client_id", gateway.Client.ClientId)
