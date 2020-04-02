@@ -56,7 +56,7 @@ func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVer
 
 // CreatePaymentChargeOTP is used for payment of direct link transactions based on card number via card_token acquired from binding process (create a card token).
 // This API will alse send OTP code confirmation to user if user phonenumber is valid.
-func (g *CoreGateway) CreatePaymentChargeOTP(token string, req PaymentChargeOTPRequest) (res PaymentChargeResponse, err error) {
+func (g *CoreGateway) CreatePaymentChargeOTP(token, idempotencyKey string, req PaymentChargeOTPRequest) (res PaymentChargeResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPost
 	body, err := json.Marshal(req)
@@ -64,10 +64,11 @@ func (g *CoreGateway) CreatePaymentChargeOTP(token string, req PaymentChargeOTPR
 	signature := generateSignature(urlCreatePaymentChargeOTP, method, token, timestamp, string(body), g.Client.ClientSecret)
 
 	headers := map[string]string{
-		"Authorization": token,
-		"BRI-Timestamp": timestamp,
-		"BRI-Signature": signature,
-		"Content-Type":  "application/json",
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"BRI-Signature":   signature,
+		"Content-Type":    "application/json",
+		"Idempotency-Key": idempotencyKey,
 	}
 
 	err = g.Call(method, urlCreatePaymentChargeOTP, headers, strings.NewReader(string(body)), &res)
