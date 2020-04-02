@@ -73,3 +73,13 @@ type PaymentChargeOTPVerifyRequestData struct {
 	ChargeToken string `json:"charge_token"`
 	Passcode    string `json:"passcode"`
 }
+
+// DeleteCardTokenRequest defines payload for direct debit - delete card token
+type DeleteCardTokenRequest struct {
+	Body DeleteCardTokenRequestData `json:"body"`
+}
+
+// DeleteCardTokenRequestData defines data payload for direct debit - delete card token
+type DeleteCardTokenRequestData struct {
+	CardToken string `json:"card_token"`
+}

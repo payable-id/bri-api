@@ -9,6 +9,7 @@ import (
 const (
 	urlCreateCardTokenOTP           = "/v1/directdebit/tokens"         // POST
 	urlCreateCardTokenOTPVerify     = "/v1/directdebit/tokens"         // PATCH
+	urlDeleteCardToken              = "/v1/directdebit/tokens"         // DELETE
 	urlCreatePaymentChargeOTP       = "/v1/directdebit/charges"        // POST
 	urlCreatePaymentChargeOTPVerify = "/v1/directdebit/charges/verify" // POST
 )
@@ -53,6 +54,26 @@ func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVer
 	}
 
 	err = g.CallDirectDebit(method, urlCreateCardTokenOTPVerify, headers, strings.NewReader(string(body)), &res)
+	return
+}
+
+// DeleteCardToken is used to unbind user's direct debit card token
+func (g *CoreGateway) DeleteCardToken(token string, req DeleteCardTokenRequest) (res DeleteCardTokenResponse, err error) {
+	token = "Bearer " + token
+	method := http.MethodDelete
+	body, err := json.Marshal(req)
+	timestamp := getTimestamp(BRI_TIME_FORMAT)
+	signature := generateSignature(urlDeleteCardToken, method, token, timestamp, string(body), g.Client.ClientSecret)
+
+	headers := map[string]string{
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+
+	err = g.CallDirectDebit(method, urlDeleteCardToken, headers, strings.NewReader(string(body)), &res)
 	return
 }
 

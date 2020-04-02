@@ -137,3 +137,14 @@ type PaymentChargeResponseData struct {
 	Location      Location               `json:"location"`
 	Metadata      map[string]interface{} `json:"metadata"`
 }
+
+// DeleteCardTokenResponse defines response for direct debit - delete card token
+type DeleteCardTokenResponse struct {
+	Body DeleteCardTokenResponseData `json:"body"`
+	ErrorResponse
+}
+
+// DeleteCardTokenResponseData defines data response for direct debit - delete card token
+type DeleteCardTokenResponseData struct {
+	Status string `json:"status"`
+}
