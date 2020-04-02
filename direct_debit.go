@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const (
+var (
 	urlCreateCardTokenOTP           = "/v1/directdebit/tokens"         // POST
 	urlCreateCardTokenOTPVerify     = "/v1/directdebit/tokens"         // PATCH
 	urlDeleteCardToken              = "/v1/directdebit/tokens"         // DELETE
