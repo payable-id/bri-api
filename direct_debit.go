@@ -6,9 +6,10 @@ import (
 	"strings"
 )
 
-const (
+var (
 	urlCreateCardTokenOTP           = "/v1/directdebit/tokens"         // POST
 	urlCreateCardTokenOTPVerify     = "/v1/directdebit/tokens"         // PATCH
+	urlDeleteCardToken              = "/v1/directdebit/tokens"         // DELETE
 	urlCreatePaymentChargeOTP       = "/v1/directdebit/charges"        // POST
 	urlCreatePaymentChargeOTPVerify = "/v1/directdebit/charges/verify" // POST
 )
@@ -25,13 +26,14 @@ func (g *CoreGateway) CreateCardTokenOTP(token string, req CardTokenOTPRequest) 
 	signature := generateSignature(urlCreateCardTokenOTP, method, token, timestamp, string(body), g.Client.ClientSecret)
 
 	headers := map[string]string{
-		"Authorization": token,
-		"BRI-Timestamp": timestamp,
-		"BRI-Signature": signature,
-		"Content-Type":  "application/json",
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"X-BRI-Api-Key":   g.Client.APIKey,
 	}
 
-	err = g.Call(method, urlCreateCardTokenOTP, headers, strings.NewReader(string(body)), &res)
+	err = g.CallDirectDebit(method, urlCreateCardTokenOTP, headers, strings.NewReader(string(body)), &res)
 	return
 }
 
@@ -44,19 +46,40 @@ func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVer
 	signature := generateSignature(urlCreateCardTokenOTPVerify, method, token, timestamp, string(body), g.Client.ClientSecret)
 
 	headers := map[string]string{
-		"Authorization": token,
-		"BRI-Timestamp": timestamp,
-		"BRI-Signature": signature,
-		"Content-Type":  "application/json",
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"X-BRI-Api-Key":   g.Client.APIKey,
 	}
 
-	err = g.Call(method, urlCreateCardTokenOTPVerify, headers, strings.NewReader(string(body)), &res)
+	err = g.CallDirectDebit(method, urlCreateCardTokenOTPVerify, headers, strings.NewReader(string(body)), &res)
+	return
+}
+
+// DeleteCardToken is used to unbind user's direct debit card token
+func (g *CoreGateway) DeleteCardToken(token string, req DeleteCardTokenRequest) (res DeleteCardTokenResponse, err error) {
+	token = "Bearer " + token
+	method := http.MethodDelete
+	body, err := json.Marshal(req)
+	timestamp := getTimestamp(BRI_TIME_FORMAT)
+	signature := generateSignature(urlDeleteCardToken, method, token, timestamp, string(body), g.Client.ClientSecret)
+
+	headers := map[string]string{
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+
+	err = g.CallDirectDebit(method, urlDeleteCardToken, headers, strings.NewReader(string(body)), &res)
 	return
 }
 
 // CreatePaymentChargeOTP is used for payment of direct link transactions based on card number via card_token acquired from binding process (create a card token).
 // This API will alse send OTP code confirmation to user if user phonenumber is valid.
-func (g *CoreGateway) CreatePaymentChargeOTP(token string, req PaymentChargeOTPRequest) (res PaymentChargeResponse, err error) {
+func (g *CoreGateway) CreatePaymentChargeOTP(token, idempotencyKey string, req PaymentChargeOTPRequest) (res PaymentChargeResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPost
 	body, err := json.Marshal(req)
@@ -64,13 +87,15 @@ func (g *CoreGateway) CreatePaymentChargeOTP(token string, req PaymentChargeOTPR
 	signature := generateSignature(urlCreatePaymentChargeOTP, method, token, timestamp, string(body), g.Client.ClientSecret)
 
 	headers := map[string]string{
-		"Authorization": token,
-		"BRI-Timestamp": timestamp,
-		"BRI-Signature": signature,
-		"Content-Type":  "application/json",
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"Idempotency-Key": idempotencyKey,
+		"X-BRI-Api-Key":   g.Client.APIKey,
 	}
 
-	err = g.Call(method, urlCreatePaymentChargeOTP, headers, strings.NewReader(string(body)), &res)
+	err = g.CallDirectDebit(method, urlCreatePaymentChargeOTP, headers, strings.NewReader(string(body)), &res)
 	return
 }
 
@@ -83,12 +108,13 @@ func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChar
 	signature := generateSignature(urlCreatePaymentChargeOTPVerify, method, token, timestamp, string(body), g.Client.ClientSecret)
 
 	headers := map[string]string{
-		"Authorization": token,
-		"BRI-Timestamp": timestamp,
-		"BRI-Signature": signature,
-		"Content-Type":  "application/json",
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"X-BRI-Api-Key":   g.Client.APIKey,
 	}
 
-	err = g.Call(method, urlCreatePaymentChargeOTPVerify, headers, strings.NewReader(string(body)), &res)
+	err = g.CallDirectDebit(method, urlCreatePaymentChargeOTPVerify, headers, strings.NewReader(string(body)), &res)
 	return
 }

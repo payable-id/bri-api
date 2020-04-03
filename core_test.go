@@ -16,12 +16,25 @@ import (
 type BriSanguTestSuite struct {
 	suite.Suite
 	client Client
+
+	// property for direct debit
+	cardPan               string
+	phoneNumber           string
+	email                 string
+	registrationCardToken string
+	cardToken             string
+	chargeToken           string
 }
 
 type credentials struct {
-	BaseUrl      string
-	ClientId     string
-	ClientSecret string
+	BaseUrl            string
+	DirectDebitBaseURL string
+	ClientId           string
+	ClientSecret       string
+	APIKey             string
+	CardPan            string
+	PhoneNumber        string
+	Email              string
 }
 
 func TestBriSanguTestSuite(t *testing.T) {
@@ -43,8 +56,13 @@ func (bri *BriSanguTestSuite) SetupTest() {
 
 	bri.client = NewClient()
 	bri.client.BaseUrl = cred.BaseUrl
+	bri.client.DirectDebitBaseURL = cred.DirectDebitBaseURL
 	bri.client.ClientId = cred.ClientId
 	bri.client.ClientSecret = cred.ClientSecret
+	bri.client.APIKey = cred.APIKey
+	bri.cardPan = cred.CardPan
+	bri.phoneNumber = cred.PhoneNumber
+	bri.email = cred.Email
 }
 
 func (bri *BriSanguTestSuite) TestGetTokenSuccess() {
