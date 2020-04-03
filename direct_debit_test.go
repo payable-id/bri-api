@@ -18,13 +18,6 @@ func generateSha1Timestamp(salt string) string {
 }
 
 func (bri *BriSanguTestSuite) TestDirectDebit_01_CreateCardToken() {
-	// modify url for unit test
-	urlCreateCardTokenOTP = fmt.Sprintf("/sandbox%s", urlCreateCardTokenOTP)
-	urlCreateCardTokenOTPVerify = fmt.Sprintf("/sandbox%s", urlCreateCardTokenOTPVerify)
-	urlCreatePaymentChargeOTP = fmt.Sprintf("/sandbox%s", urlCreatePaymentChargeOTP)
-	urlCreatePaymentChargeOTPVerify = fmt.Sprintf("/sandbox%s", urlCreatePaymentChargeOTPVerify)
-	urlDeleteCardToken = fmt.Sprintf("/sandbox%s", urlDeleteCardToken)
-
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}

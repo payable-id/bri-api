@@ -32,6 +32,7 @@ type credentials struct {
 	ClientId           string
 	ClientSecret       string
 	APIKey             string
+	IsSandbox          bool
 	CardPan            string
 	PhoneNumber        string
 	Email              string
@@ -60,6 +61,8 @@ func (bri *BriSanguTestSuite) SetupTest() {
 	bri.client.ClientId = cred.ClientId
 	bri.client.ClientSecret = cred.ClientSecret
 	bri.client.APIKey = cred.APIKey
+	bri.client.DirectDebitHostUseSandboxPrefix(cred.IsSandbox)
+
 	bri.cardPan = cred.CardPan
 	bri.phoneNumber = cred.PhoneNumber
 	bri.email = cred.Email
