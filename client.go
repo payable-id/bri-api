@@ -55,6 +55,23 @@ func getHTTPClient() *httpclient.Client {
 	)
 }
 
+// DirectDebitHostUseSandboxPrefix used to modify direct debit staging url to use /sandbox/* path due to different host
+func (c *Client) DirectDebitHostUseSandboxPrefix(use bool) {
+	if use {
+		urlCreateCardTokenOTP = "/sandbox/v1/directdebit/tokens"                   // POST
+		urlCreateCardTokenOTPVerify = "/sandbox/v1/directdebit/tokens"             // PATCH
+		urlDeleteCardToken = "/sandbox/v1/directdebit/tokens"                      // DELETE
+		urlCreatePaymentChargeOTP = "/sandbox/v1/directdebit/charges"              // POST
+		urlCreatePaymentChargeOTPVerify = "/sandbox/v1/directdebit/charges/verify" // POST
+	} else {
+		urlCreateCardTokenOTP = "/v1/directdebit/tokens"                   // POST
+		urlCreateCardTokenOTPVerify = "/v1/directdebit/tokens"             // PATCH
+		urlDeleteCardToken = "/v1/directdebit/tokens"                      // DELETE
+		urlCreatePaymentChargeOTP = "/v1/directdebit/charges"              // POST
+		urlCreatePaymentChargeOTPVerify = "/v1/directdebit/charges/verify" // POST
+	}
+}
+
 // NewRequest : send new request
 func (c *Client) NewRequest(method string, fullPath string, headers map[string]string, body io.Reader) (*http.Request, error) {
 	logLevel := c.LogLevel
