@@ -83,9 +83,3 @@ type DeleteCardTokenRequest struct {
 type DeleteCardTokenRequestData struct {
 	CardToken string `json:"card_token"`
 }
-
-// DeleteVaRequestData defines data payload for VA account deletion
-type DeleteVaRequestData struct {
-	InstitutionCode string `json:"institutionCode"`
-	CustCode        string `json:"custCode"`
-}

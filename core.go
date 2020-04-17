@@ -2,6 +2,7 @@ package bri
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/url"
 	"strings"
@@ -126,12 +127,12 @@ func (gateway *CoreGateway) GetReportVA(token string, req GetReportVaRequest) (r
 	return
 }
 
-func (gateway *CoreGateway) DeleteVA(token string, req DeleteVaRequestData) (res VaResponse, err error) {
+func (gateway *CoreGateway) DeleteVA(token string, institutionCode string, brivaNo string, custCode string) (res VaResponse, err error) {
 	token = "Bearer " + token
 	method := "DELETE"
-	body, err := json.Marshal(req)
+	body := fmt.Sprintf("institutionCode=%s&brivaNo=%s&custCode=%s", institutionCode, brivaNo, custCode)
 	timestamp := getTimestamp(BRI_TIME_FORMAT)
-	signature := generateSignature(VA_PATH, method, token, timestamp, string(body), gateway.Client.ClientSecret)
+	signature := generateSignature(VA_PATH, method, token, timestamp, body, gateway.Client.ClientSecret)
 
 	headers := map[string]string{
 		"Authorization": token,
