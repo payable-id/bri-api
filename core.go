@@ -125,3 +125,26 @@ func (gateway *CoreGateway) GetReportVA(token string, req GetReportVaRequest) (r
 
 	return
 }
+
+func (gateway *CoreGateway) DeleteVA(token string, req DeleteVaRequestData) (res VaResponse, err error) {
+	token = "Bearer " + token
+	method := "DELETE"
+	body, err := json.Marshal(req)
+	timestamp := getTimestamp(BRI_TIME_FORMAT)
+	signature := generateSignature(VA_PATH, method, token, timestamp, string(body), gateway.Client.ClientSecret)
+
+	headers := map[string]string{
+		"Authorization": token,
+		"BRI-Timestamp": timestamp,
+		"BRI-Signature": signature,
+		"Content-Type":  "application/json",
+	}
+
+	err = gateway.Call(method, VA_PATH, headers, strings.NewReader(string(body)), &res)
+
+	if err != nil {
+		return
+	}
+
+	return
+}
