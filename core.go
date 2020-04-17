@@ -32,16 +32,16 @@ func (gateway *CoreGateway) Call(method, path string, header map[string]string, 
 }
 
 // CallDirectDebit will call direct debit api
-func (gateway *CoreGateway) CallDirectDebit(method, path string, header map[string]string, body io.Reader, v interface{}, vErr interface{}) error {
+func (gateway *CoreGateway) CallDirectDebit(method, path string, header map[string]string, body io.Reader, v interface{}) error {
 	if !strings.HasPrefix(path, "/") {
 		path = "/" + path
 	}
 
 	path = gateway.Client.DirectDebitBaseURL + path
-	return gateway.Client.Call(method, path, header, body, v, vErr)
+	return gateway.Client.Call(method, path, header, body, v, nil)
 }
 
-func (gateway *CoreGateway) GetToken() (res TokenResponse, respErr ErrorResponse, err error) {
+func (gateway *CoreGateway) GetToken() (res TokenResponse, err error) {
 	data := url.Values{}
 	data.Set("client_id", gateway.Client.ClientId)
 	data.Set("client_secret", gateway.Client.ClientSecret)
@@ -50,7 +50,7 @@ func (gateway *CoreGateway) GetToken() (res TokenResponse, respErr ErrorResponse
 		"Content-Type": "application/x-www-form-urlencoded",
 	}
 
-	err = gateway.Call("POST", TOKEN_PATH, headers, strings.NewReader(data.Encode()), &res, &respErr)
+	err = gateway.Call("POST", TOKEN_PATH, headers, strings.NewReader(data.Encode()), &res, nil)
 	if err != nil {
 		return
 	}
@@ -58,7 +58,7 @@ func (gateway *CoreGateway) GetToken() (res TokenResponse, respErr ErrorResponse
 	return
 }
 
-func (gateway *CoreGateway) CreateVA(token string, req CreateVaRequest) (res VaResponse, respErr ErrorResponse, err error) {
+func (gateway *CoreGateway) CreateVA(token string, req CreateVaRequest) (res VaResponse, err error) {
 	token = "Bearer " + token
 	method := "POST"
 	body, err := json.Marshal(req)
@@ -72,7 +72,7 @@ func (gateway *CoreGateway) CreateVA(token string, req CreateVaRequest) (res VaR
 		"Content-Type":  "application/json",
 	}
 
-	err = gateway.Call(method, VA_PATH, headers, strings.NewReader(string(body)), &res, &respErr)
+	err = gateway.Call(method, VA_PATH, headers, strings.NewReader(string(body)), &res, nil)
 
 	if err != nil {
 		return
@@ -81,7 +81,7 @@ func (gateway *CoreGateway) CreateVA(token string, req CreateVaRequest) (res VaR
 	return
 }
 
-func (gateway *CoreGateway) UpdateVA(token string, req CreateVaRequest) (res VaResponse, respErr ErrorResponse, err error) {
+func (gateway *CoreGateway) UpdateVA(token string, req CreateVaRequest) (res VaResponse, err error) {
 	token = "Bearer " + token
 	method := "PUT"
 	body, err := json.Marshal(req)
@@ -95,7 +95,7 @@ func (gateway *CoreGateway) UpdateVA(token string, req CreateVaRequest) (res VaR
 		"Content-Type":  "application/json",
 	}
 
-	err = gateway.Call(method, VA_PATH, headers, strings.NewReader(string(body)), &res, &respErr)
+	err = gateway.Call(method, VA_PATH, headers, strings.NewReader(string(body)), &res, nil)
 
 	if err != nil {
 		return
@@ -104,7 +104,7 @@ func (gateway *CoreGateway) UpdateVA(token string, req CreateVaRequest) (res VaR
 	return
 }
 
-func (gateway *CoreGateway) GetReportVA(token string, req GetReportVaRequest) (res VaReportResponse, respErr ErrorResponse, err error) {
+func (gateway *CoreGateway) GetReportVA(token string, req GetReportVaRequest) (res VaReportResponse, err error) {
 	token = "Bearer " + token
 	method := "GET"
 	body := ""
@@ -118,7 +118,7 @@ func (gateway *CoreGateway) GetReportVA(token string, req GetReportVaRequest) (r
 		"BRI-Signature": signature,
 	}
 
-	err = gateway.Call(method, path, headers, strings.NewReader(string(body)), &res, &respErr)
+	err = gateway.Call(method, path, headers, strings.NewReader(string(body)), &res, nil)
 
 	if err != nil {
 		return

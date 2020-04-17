@@ -143,9 +143,10 @@ func (c *Client) ExecuteRequest(req *http.Request, v interface{}, vErr interface
 
 	if v != nil {
 		if err = json.Unmarshal(resBody, v); err != nil {
-			if err = json.Unmarshal(resBody, &vErr); err != nil {
-				return err
+			if vErr != nil {
+				err = json.Unmarshal(resBody, &vErr)
 			}
+			return err
 		}
 	}
 
