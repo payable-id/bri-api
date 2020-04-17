@@ -95,7 +95,7 @@ func (c *Client) NewRequest(method string, fullPath string, headers map[string]s
 }
 
 // ExecuteRequest : execute request
-func (c *Client) ExecuteRequest(req *http.Request, v interface{}) error {
+func (c *Client) ExecuteRequest(req *http.Request, v interface{}, vErr interface{}) error {
 	logLevel := c.LogLevel
 	logger := c.Logger
 
@@ -143,7 +143,9 @@ func (c *Client) ExecuteRequest(req *http.Request, v interface{}) error {
 
 	if v != nil {
 		if err = json.Unmarshal(resBody, v); err != nil {
-			return err
+			if err = json.Unmarshal(resBody, &vErr); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -153,14 +155,14 @@ func (c *Client) ExecuteRequest(req *http.Request, v interface{}) error {
 // Call the BRI API at specific `path` using the specified HTTP `method`. The result will be
 // given to `v` if there is no error. If any error occurred, the return of this function is the error
 // itself, otherwise nil.
-func (c *Client) Call(method, path string, header map[string]string, body io.Reader, v interface{}) error {
+func (c *Client) Call(method, path string, header map[string]string, body io.Reader, v interface{}, vErr interface{}) error {
 	req, err := c.NewRequest(method, path, header, body)
 
 	if err != nil {
 		return err
 	}
 
-	return c.ExecuteRequest(req, v)
+	return c.ExecuteRequest(req, v, vErr)
 }
 
 // ===================== END HTTP CLIENT ================================================

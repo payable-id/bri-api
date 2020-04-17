@@ -73,7 +73,7 @@ func (bri *BriSanguTestSuite) TestGetTokenSuccess() {
 		Client: bri.client,
 	}
 
-	resp, err := coreGateway.GetToken()
+	resp, _, err := coreGateway.GetToken()
 	containsProduct := false
 	for _, v := range resp.ProductList {
 		if strings.Contains(v, "briva") {
@@ -95,7 +95,7 @@ func (bri *BriSanguTestSuite) TestGetTokenFailedInvalidKeySecret() {
 		Client: bri.client,
 	}
 
-	resp, err := coreGateway.GetToken()
+	resp, _, err := coreGateway.GetToken()
 
 	assert.Equal(bri.T(), "", resp.AccessToken)
 	assert.Equal(bri.T(), nil, err)
@@ -108,7 +108,7 @@ func (bri *BriSanguTestSuite) TestGetTokenFailedInvalidUrl() {
 		Client: bri.client,
 	}
 
-	resp, err := coreGateway.GetToken()
+	resp, _, err := coreGateway.GetToken()
 
 	assert.NotNil(bri.T(), err)
 	assert.Equal(bri.T(), "", resp.AccessToken)
@@ -121,7 +121,7 @@ func (bri *BriSanguTestSuite) TestGetTokenFailedInvalidProduct() {
 		Client: bri.client,
 	}
 
-	resp, err := coreGateway.GetToken()
+	resp, _, err := coreGateway.GetToken()
 
 	containsProduct := false
 	for _, v := range resp.ProductList {
@@ -139,7 +139,7 @@ func (bri *BriSanguTestSuite) TestCreateVaSuccess() {
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
-	tokenResp, err := coreGateway.GetToken()
+	tokenResp, _, err := coreGateway.GetToken()
 
 	random := strconv.Itoa(rand.Intn(10000))
 	dt := time.Now().AddDate(0, 3, 0)
@@ -155,7 +155,7 @@ func (bri *BriSanguTestSuite) TestCreateVaSuccess() {
 	}
 
 	token := tokenResp.AccessToken
-	resp, err := coreGateway.CreateVA(token, req)
+	resp, _, err := coreGateway.CreateVA(token, req)
 
 	assert.Equal(bri.T(), true, resp.Status)
 	assert.Equal(bri.T(), "00", resp.ResponseCode)
@@ -166,7 +166,7 @@ func (bri *BriSanguTestSuite) TestCreateVaFailedDuplicate() {
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
-	tokenResp, err := coreGateway.GetToken()
+	tokenResp, _, err := coreGateway.GetToken()
 
 	random := strconv.Itoa(rand.Intn(10000))
 	dt := time.Now().AddDate(0, 3, 0)
@@ -182,10 +182,10 @@ func (bri *BriSanguTestSuite) TestCreateVaFailedDuplicate() {
 	}
 
 	token := tokenResp.AccessToken
-	resp, err := coreGateway.CreateVA(token, req)
+	resp, _, err := coreGateway.CreateVA(token, req)
 
 	// create second request
-	resp, err = coreGateway.CreateVA(token, req)
+	resp, _, err = coreGateway.CreateVA(token, req)
 
 	assert.Equal(bri.T(), false, resp.Status)
 	assert.Equal(bri.T(), "13", resp.ResponseCode)
@@ -196,7 +196,7 @@ func (bri *BriSanguTestSuite) TestCreateVaFailedExpiredMoreThanThreeMonths() {
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
-	tokenResp, err := coreGateway.GetToken()
+	tokenResp, _, err := coreGateway.GetToken()
 
 	random := strconv.Itoa(rand.Intn(10000))
 	dt := time.Now().AddDate(0, 3, 1)
@@ -212,7 +212,7 @@ func (bri *BriSanguTestSuite) TestCreateVaFailedExpiredMoreThanThreeMonths() {
 	}
 
 	token := tokenResp.AccessToken
-	resp, err := coreGateway.CreateVA(token, req)
+	resp, _, err := coreGateway.CreateVA(token, req)
 
 	assert.Equal(bri.T(), false, resp.Status)
 	assert.Equal(bri.T(), "12", resp.ResponseCode)
@@ -223,7 +223,7 @@ func (bri *BriSanguTestSuite) TestUpdateVaSuccess() {
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
-	tokenResp, err := coreGateway.GetToken()
+	tokenResp, _, err := coreGateway.GetToken()
 
 	random := strconv.Itoa(rand.Intn(10000))
 	dt := time.Now().AddDate(0, 3, 0)
@@ -239,7 +239,7 @@ func (bri *BriSanguTestSuite) TestUpdateVaSuccess() {
 	}
 
 	token := tokenResp.AccessToken
-	resp, err := coreGateway.UpdateVA(token, req)
+	resp, _, err := coreGateway.UpdateVA(token, req)
 
 	assert.Equal(bri.T(), true, resp.Status)
 	assert.Equal(bri.T(), "00", resp.ResponseCode)
@@ -250,7 +250,7 @@ func (bri *BriSanguTestSuite) TestUpdateVaFailedCustomerNotFound() {
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
-	tokenResp, err := coreGateway.GetToken()
+	tokenResp, _, err := coreGateway.GetToken()
 
 	random := strconv.Itoa(rand.Intn(10000))
 	dt := time.Now().AddDate(0, 3, 1)
@@ -266,7 +266,7 @@ func (bri *BriSanguTestSuite) TestUpdateVaFailedCustomerNotFound() {
 	}
 
 	token := tokenResp.AccessToken
-	resp, err := coreGateway.UpdateVA(token, req)
+	resp, _, err := coreGateway.UpdateVA(token, req)
 
 	assert.Equal(bri.T(), false, resp.Status)
 	assert.Equal(bri.T(), "14", resp.ResponseCode)
@@ -277,7 +277,7 @@ func (bri *BriSanguTestSuite) TestUpdateVaFailedExpiredMoreThanThreeMonths() {
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
-	tokenResp, err := coreGateway.GetToken()
+	tokenResp, _, err := coreGateway.GetToken()
 
 	random := strconv.Itoa(rand.Intn(10000))
 	dt := time.Now().AddDate(0, 3, 1)
@@ -293,7 +293,7 @@ func (bri *BriSanguTestSuite) TestUpdateVaFailedExpiredMoreThanThreeMonths() {
 	}
 
 	token := tokenResp.AccessToken
-	resp, err := coreGateway.UpdateVA(token, req)
+	resp, _, err := coreGateway.UpdateVA(token, req)
 
 	assert.Equal(bri.T(), false, resp.Status)
 	assert.Equal(bri.T(), "12", resp.ResponseCode)
@@ -304,7 +304,7 @@ func (bri *BriSanguTestSuite) TestGetReportVaSuccess() {
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
-	tokenResp, err := coreGateway.GetToken()
+	tokenResp, _, err := coreGateway.GetToken()
 
 	req := GetReportVaRequest{
 		InstitutionCode: "J104408",
@@ -314,7 +314,7 @@ func (bri *BriSanguTestSuite) TestGetReportVaSuccess() {
 	}
 
 	token := tokenResp.AccessToken
-	resp, err := coreGateway.GetReportVA(token, req)
+	resp, _, err := coreGateway.GetReportVA(token, req)
 
 	assert.Equal(bri.T(), true, resp.Status)
 	assert.Equal(bri.T(), "00", resp.ResponseCode)
@@ -325,7 +325,7 @@ func (bri *BriSanguTestSuite) TestGetReportVaFailedNoTransaction() {
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
-	tokenResp, err := coreGateway.GetToken()
+	tokenResp, _, err := coreGateway.GetToken()
 
 	req := GetReportVaRequest{
 		InstitutionCode: "J104408",
@@ -335,7 +335,7 @@ func (bri *BriSanguTestSuite) TestGetReportVaFailedNoTransaction() {
 	}
 
 	token := tokenResp.AccessToken
-	resp, err := coreGateway.GetReportVA(token, req)
+	resp, _, err := coreGateway.GetReportVA(token, req)
 
 	assert.Equal(bri.T(), false, resp.Status)
 	assert.Equal(bri.T(), "41", resp.ResponseCode)
@@ -346,7 +346,7 @@ func (bri *BriSanguTestSuite) TestGetReportVaFailedInvalidDateRange() {
 	coreGateway := CoreGateway{
 		Client: bri.client,
 	}
-	tokenResp, err := coreGateway.GetToken()
+	tokenResp, _, err := coreGateway.GetToken()
 
 	req := GetReportVaRequest{
 		InstitutionCode: "J104408",
@@ -356,7 +356,7 @@ func (bri *BriSanguTestSuite) TestGetReportVaFailedInvalidDateRange() {
 	}
 
 	token := tokenResp.AccessToken
-	resp, err := coreGateway.GetReportVA(token, req)
+	resp, _, err := coreGateway.GetReportVA(token, req)
 
 	assert.Equal(bri.T(), false, resp.Status)
 	assert.Equal(bri.T(), "42", resp.ResponseCode)

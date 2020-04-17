@@ -16,7 +16,7 @@ var (
 
 // CreateCardTokenOTP verifies that the information provided by the customers matches the bank data.
 // This API will alse send OTP code confirmation to user if user phonenumber is valid.
-func (g *CoreGateway) CreateCardTokenOTP(token string, req CardTokenOTPRequest) (res CardTokenOTPResponse, err error) {
+func (g *CoreGateway) CreateCardTokenOTP(token string, req CardTokenOTPRequest) (res CardTokenOTPResponse, respErr ErrorResponse, err error) {
 	req.Body.OtpBriStatus = "YES"
 
 	token = "Bearer " + token
@@ -33,12 +33,12 @@ func (g *CoreGateway) CreateCardTokenOTP(token string, req CardTokenOTPRequest) 
 		"X-BRI-Api-Key":   g.Client.APIKey,
 	}
 
-	err = g.CallDirectDebit(method, urlCreateCardTokenOTP, headers, strings.NewReader(string(body)), &res)
+	err = g.CallDirectDebit(method, urlCreateCardTokenOTP, headers, strings.NewReader(string(body)), &res, &respErr)
 	return
 }
 
 // CreateCardTokenOTPVerify is used to verify OTP from create card token OTP url.
-func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVerifyRequest) (res CardTokenOTPVerifyResponse, err error) {
+func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVerifyRequest) (res CardTokenOTPVerifyResponse, respErr ErrorResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPatch
 	body, err := json.Marshal(req)
@@ -53,12 +53,12 @@ func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVer
 		"X-BRI-Api-Key":   g.Client.APIKey,
 	}
 
-	err = g.CallDirectDebit(method, urlCreateCardTokenOTPVerify, headers, strings.NewReader(string(body)), &res)
+	err = g.CallDirectDebit(method, urlCreateCardTokenOTPVerify, headers, strings.NewReader(string(body)), &res, &respErr)
 	return
 }
 
 // DeleteCardToken is used to unbind user's direct debit card token
-func (g *CoreGateway) DeleteCardToken(token string, req DeleteCardTokenRequest) (res DeleteCardTokenResponse, err error) {
+func (g *CoreGateway) DeleteCardToken(token string, req DeleteCardTokenRequest) (res DeleteCardTokenResponse, respErr ErrorResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodDelete
 	body, err := json.Marshal(req)
@@ -73,13 +73,13 @@ func (g *CoreGateway) DeleteCardToken(token string, req DeleteCardTokenRequest) 
 		"X-BRI-Api-Key":   g.Client.APIKey,
 	}
 
-	err = g.CallDirectDebit(method, urlDeleteCardToken, headers, strings.NewReader(string(body)), &res)
+	err = g.CallDirectDebit(method, urlDeleteCardToken, headers, strings.NewReader(string(body)), &res, &respErr)
 	return
 }
 
 // CreatePaymentChargeOTP is used for payment of direct link transactions based on card number via card_token acquired from binding process (create a card token).
 // This API will alse send OTP code confirmation to user if user phonenumber is valid.
-func (g *CoreGateway) CreatePaymentChargeOTP(token, idempotencyKey string, req PaymentChargeOTPRequest) (res PaymentChargeResponse, err error) {
+func (g *CoreGateway) CreatePaymentChargeOTP(token, idempotencyKey string, req PaymentChargeOTPRequest) (res PaymentChargeResponse, respErr ErrorResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPost
 	body, err := json.Marshal(req)
@@ -95,12 +95,12 @@ func (g *CoreGateway) CreatePaymentChargeOTP(token, idempotencyKey string, req P
 		"X-BRI-Api-Key":   g.Client.APIKey,
 	}
 
-	err = g.CallDirectDebit(method, urlCreatePaymentChargeOTP, headers, strings.NewReader(string(body)), &res)
+	err = g.CallDirectDebit(method, urlCreatePaymentChargeOTP, headers, strings.NewReader(string(body)), &res, &respErr)
 	return
 }
 
 // CreatePaymentChargeOTPVerify is used to verify OTP from create payment charge OTP url.
-func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChargeOTPVerifyRequest) (res PaymentChargeResponse, err error) {
+func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChargeOTPVerifyRequest) (res PaymentChargeResponse, respErr ErrorResponse, err error) {
 	token = "Bearer " + token
 	method := http.MethodPost
 	body, err := json.Marshal(req)
@@ -115,6 +115,6 @@ func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChar
 		"X-BRI-Api-Key":   g.Client.APIKey,
 	}
 
-	err = g.CallDirectDebit(method, urlCreatePaymentChargeOTPVerify, headers, strings.NewReader(string(body)), &res)
+	err = g.CallDirectDebit(method, urlCreatePaymentChargeOTPVerify, headers, strings.NewReader(string(body)), &res, &respErr)
 	return
 }
