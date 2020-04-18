@@ -138,7 +138,7 @@ func (gateway *CoreGateway) DeleteVA(token string, institutionCode string, briva
 		"Authorization": token,
 		"BRI-Timestamp": timestamp,
 		"BRI-Signature": signature,
-		"Content-Type":  "application/json",
+		"Content-Type":  "text/plain",
 	}
 
 	err = gateway.Call(method, VA_PATH, headers, strings.NewReader(string(body)), &res, &respErr)
