@@ -141,6 +141,10 @@ func (c *Client) ExecuteRequest(req *http.Request, v interface{}, vErr interface
 		return errors.New("invalid url")
 	}
 
+	if res.StatusCode == 204 {
+		return errors.New("204: empty response")
+	}
+
 	if v != nil {
 		if err = json.Unmarshal(resBody, v); err != nil {
 			if vErr != nil {
