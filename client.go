@@ -21,6 +21,7 @@ type Client struct {
 	ClientSecret       string
 	APIKey             string
 	LogLevel           int
+	Timeout            time.Duration
 	Logger             *log.Logger
 }
 
@@ -33,23 +34,23 @@ func NewClient() Client {
 		// 2: Errors + informational (default)
 		// 3: Errors + informational + debug
 		LogLevel: 2,
+		Timeout:  10,
 		Logger:   log.New(os.Stderr, "", log.LstdFlags),
 	}
 }
 
 // ===================== HTTP CLIENT ================================================
-var defHTTPTimeout = 10 * time.Second
 var defHTTPBackoffInterval = 2 * time.Millisecond
 var defHTTPMaxJitterInterval = 5 * time.Millisecond
 var defHTTPRetryCount = 3
 
 // getHTTPClient will get heimdall http client
-func getHTTPClient() *httpclient.Client {
+func (c *Client) getHTTPClient() *httpclient.Client {
 	backoff := heimdall.NewConstantBackoff(defHTTPBackoffInterval, defHTTPMaxJitterInterval)
 	retrier := heimdall.NewRetrier(backoff)
 
 	return httpclient.NewClient(
-		httpclient.WithHTTPTimeout(defHTTPTimeout),
+		httpclient.WithHTTPTimeout(c.Timeout*time.Second),
 		httpclient.WithRetrier(retrier),
 		httpclient.WithRetryCount(defHTTPRetryCount),
 	)
@@ -104,7 +105,7 @@ func (c *Client) ExecuteRequest(req *http.Request, v interface{}, vErr interface
 	}
 
 	start := time.Now()
-	res, err := getHTTPClient().Do(req)
+	res, err := c.getHTTPClient().Do(req)
 	if err != nil {
 		if logLevel > 0 {
 			logger.Println("Cannot send request: ", err)
