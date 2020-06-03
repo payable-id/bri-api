@@ -34,7 +34,7 @@ func NewClient() Client {
 		// 2: Errors + informational (default)
 		// 3: Errors + informational + debug
 		LogLevel: 2,
-		Timeout:  10,
+		Timeout:  10 * time.Second,
 		Logger:   log.New(os.Stderr, "", log.LstdFlags),
 	}
 }
@@ -50,7 +50,7 @@ func (c *Client) getHTTPClient() *httpclient.Client {
 	retrier := heimdall.NewRetrier(backoff)
 
 	return httpclient.NewClient(
-		httpclient.WithHTTPTimeout(c.Timeout*time.Second),
+		httpclient.WithHTTPTimeout(c.Timeout),
 		httpclient.WithRetrier(retrier),
 		httpclient.WithRetryCount(defHTTPRetryCount),
 	)
