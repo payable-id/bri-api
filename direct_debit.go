@@ -32,7 +32,10 @@ func (g *CoreGateway) CreateCardTokenOTP(token string, req CardTokenOTPRequest) 
 		"BRI-Timestamp":   timestamp,
 		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
-		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+	
+	if !g.Client.IsProduction {
+		headers["X-BRI-Api-Key"] = g.Client.APIKey
 	}
 
 	err = g.CallDirectDebit(method, urlCreateCardTokenOTP, headers, strings.NewReader(string(body)), &res)
@@ -52,7 +55,10 @@ func (g *CoreGateway) CreateCardTokenOTPVerify(token string, req CardTokenOTPVer
 		"BRI-Timestamp":   timestamp,
 		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
-		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+
+	if !g.Client.IsProduction {
+		headers["X-BRI-Api-Key"] = g.Client.APIKey
 	}
 
 	err = g.CallDirectDebit(method, urlCreateCardTokenOTPVerify, headers, strings.NewReader(string(body)), &res)
@@ -72,7 +78,10 @@ func (g *CoreGateway) DeleteCardToken(token string, req DeleteCardTokenRequest) 
 		"BRI-Timestamp":   timestamp,
 		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
-		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+
+	if !g.Client.IsProduction {
+		headers["X-BRI-Api-Key"] = g.Client.APIKey
 	}
 
 	err = g.CallDirectDebit(method, urlDeleteCardToken, headers, strings.NewReader(string(body)), &res)
@@ -94,7 +103,10 @@ func (g *CoreGateway) CreatePaymentChargeOTP(token, idempotencyKey string, req P
 		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
 		"Idempotency-Key": idempotencyKey,
-		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+
+	if !g.Client.IsProduction {
+		headers["X-BRI-Api-Key"] = g.Client.APIKey
 	}
 
 	err = g.CallDirectDebit(method, urlCreatePaymentChargeOTP, headers, strings.NewReader(string(body)), &res)
@@ -114,7 +126,10 @@ func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChar
 		"BRI-Timestamp":   timestamp,
 		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
-		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+
+	if !g.Client.IsProduction {
+		headers["X-BRI-Api-Key"] = g.Client.APIKey
 	}
 
 	err = g.CallDirectDebit(method, urlCreatePaymentChargeOTPVerify, headers, strings.NewReader(string(body)), &res)
@@ -134,7 +149,10 @@ func (g *CoreGateway) GetChargeDetail(token string, req ChargeDetailRequest) (re
 		"BRI-Timestamp":   timestamp,
 		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
-		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+	
+	if !g.Client.IsProduction {
+		headers["X-BRI-Api-Key"] = g.Client.APIKey
 	}
 
 	err = g.CallDirectDebit(method, urlChargeDetail, headers, strings.NewReader(string(body)), &res)
@@ -155,7 +173,10 @@ func (g *CoreGateway) RefundDirectDebit(token string, idempotencyKey string, req
 		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
 		"Idempotency-Key": idempotencyKey,
-		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+
+	if !g.Client.IsProduction {
+		headers["X-BRI-Api-Key"] = g.Client.APIKey
 	}
 
 	err = g.CallDirectDebit(method, urlRefundDirectDebit, headers, strings.NewReader(string(body)), &res)
