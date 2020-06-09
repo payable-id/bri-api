@@ -64,12 +64,16 @@ func (c *Client) DirectDebitHostUseSandboxPrefix(use bool) {
 		urlDeleteCardToken = "/sandbox/v1/directdebit/tokens"                      // DELETE
 		urlCreatePaymentChargeOTP = "/sandbox/v1/directdebit/charges"              // POST
 		urlCreatePaymentChargeOTPVerify = "/sandbox/v1/directdebit/charges/verify" // POST
+		urlChargeDetail = "/sandbox/v1/directdebit/charges/inquiry"                // POST
+		urlRefundDirectDebit = "/sandbox/v1/directdebit/refunds"                   // POST
 	} else {
 		urlCreateCardTokenOTP = "/v1/directdebit/tokens"                   // POST
 		urlCreateCardTokenOTPVerify = "/v1/directdebit/tokens"             // PATCH
 		urlDeleteCardToken = "/v1/directdebit/tokens"                      // DELETE
 		urlCreatePaymentChargeOTP = "/v1/directdebit/charges"              // POST
 		urlCreatePaymentChargeOTPVerify = "/v1/directdebit/charges/verify" // POST
+		urlChargeDetail = "/v1/directdebit/charges/inquiry"                // POST
+		urlRefundDirectDebit = "/v1/directdebit/refunds"                   // POST
 	}
 }
 

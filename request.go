@@ -83,3 +83,30 @@ type DeleteCardTokenRequest struct {
 type DeleteCardTokenRequestData struct {
 	CardToken string `json:"card_token"`
 }
+
+// ChargeDetailRequest defines payload for direct debit - charge detail
+type ChargeDetailRequest struct {
+	Body ChargeDetailRequestData `json:"body"`
+}
+
+// ChargeDetailRequestData defines data payload for direct debit - charge detail
+type ChargeDetailRequestData struct {
+	PaymentID string                 `json:"payment_id"`
+	Remarks   string                 `json:"remarks"`
+	Metadata  map[string]interface{} `json:"metadata"`
+}
+
+// RefundRequest defines payload for direct debit - refund
+type RefundRequest struct {
+	Body RefundRequestData `json:"body"`
+}
+
+// RefundRequestData defines data payload for direct debit - refund
+type RefundRequestData struct {
+	CardToken string                 `json:"card_token"`
+	Amount    string                 `json:"amount"`
+	PaymentID string                 `json:"payment_id"`
+	Currency  string                 `json:"currency"`
+	Reason    string                 `json:"reason"`
+	Metadata  map[string]interface{} `json:"metadata"`
+}

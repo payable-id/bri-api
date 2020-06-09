@@ -7,11 +7,13 @@ import (
 )
 
 var (
-	urlCreateCardTokenOTP           = "/v1/directdebit/tokens"         // POST
-	urlCreateCardTokenOTPVerify     = "/v1/directdebit/tokens"         // PATCH
-	urlDeleteCardToken              = "/v1/directdebit/tokens"         // DELETE
-	urlCreatePaymentChargeOTP       = "/v1/directdebit/charges"        // POST
-	urlCreatePaymentChargeOTPVerify = "/v1/directdebit/charges/verify" // POST
+	urlCreateCardTokenOTP           = "/v1/directdebit/tokens"          // POST
+	urlCreateCardTokenOTPVerify     = "/v1/directdebit/tokens"          // PATCH
+	urlDeleteCardToken              = "/v1/directdebit/tokens"          // DELETE
+	urlCreatePaymentChargeOTP       = "/v1/directdebit/charges"         // POST
+	urlCreatePaymentChargeOTPVerify = "/v1/directdebit/charges/verify"  // POST
+	urlChargeDetail                 = "/v1/directdebit/charges/inquiry" // POST
+	urlRefundDirectDebit            = "/v1/directdebit/refunds"         // POST
 )
 
 // CreateCardTokenOTP verifies that the information provided by the customers matches the bank data.
@@ -116,5 +118,46 @@ func (g *CoreGateway) CreatePaymentChargeOTPVerify(token string, req PaymentChar
 	}
 
 	err = g.CallDirectDebit(method, urlCreatePaymentChargeOTPVerify, headers, strings.NewReader(string(body)), &res)
+	return
+}
+
+// GetChargeDetail returns charge direct debit charge detail
+func (g *CoreGateway) GetChargeDetail(token string, req ChargeDetailRequest) (res ChargeDetailResponse, err error) {
+	token = "Bearer " + token
+	method := http.MethodPost
+	body, err := json.Marshal(req)
+	timestamp := getTimestamp(BRI_TIME_FORMAT)
+	signature := generateSignature(urlChargeDetail, method, token, timestamp, string(body), g.Client.ClientSecret)
+
+	headers := map[string]string{
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+
+	err = g.CallDirectDebit(method, urlChargeDetail, headers, strings.NewReader(string(body)), &res)
+	return
+}
+
+// RefundDirectDebit will refund direct debit transaction
+func (g *CoreGateway) RefundDirectDebit(token string, idempotencyKey string, req RefundRequest) (res RefundResponse, err error) {
+	token = "Bearer " + token
+	method := http.MethodPost
+	body, err := json.Marshal(req)
+	timestamp := getTimestamp(BRI_TIME_FORMAT)
+	signature := generateSignature(urlRefundDirectDebit, method, token, timestamp, string(body), g.Client.ClientSecret)
+
+	headers := map[string]string{
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"X-BRI-Signature": signature,
+		"Content-Type":    "application/json",
+		"Idempotency-Key": idempotencyKey,
+		"X-BRI-Api-Key":   g.Client.APIKey,
+	}
+
+	err = g.CallDirectDebit(method, urlRefundDirectDebit, headers, strings.NewReader(string(body)), &res)
 	return
 }

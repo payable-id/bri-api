@@ -24,6 +24,8 @@ type BriSanguTestSuite struct {
 	registrationCardToken string
 	cardToken             string
 	chargeToken           string
+	paymentID             string
+	amount                string
 }
 
 type credentials struct {
