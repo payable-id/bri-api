@@ -148,3 +148,45 @@ type DeleteCardTokenResponse struct {
 type DeleteCardTokenResponseData struct {
 	Status string `json:"status"`
 }
+
+// ChargeDetailResponse defines response for direct debit - charge detail
+type ChargeDetailResponse struct {
+	Body ChargeDetailResponseData `json:"body"`
+	ErrorResponse
+}
+
+// ChargeDetailResponseData defines data response for direct debit - charge detail
+type ChargeDetailResponseData struct {
+	Status          string                 `json:"status"`
+	Amount          string                 `json:"amount"`
+	Currency        string                 `json:"currency"`
+	PaymentID       string                 `json:"payment_id"`
+	RemarksMerchant string                 `json:"remarks_merchant"`
+	PaymentStatus   string                 `json:"payment_status"`
+	RefundHistory   []RefundResponseData   `json:"refund_history"`
+	DeviceID        string                 `json:"device_id"`
+	Location        Location               `json:"location"`
+	Metadata        map[string]interface{} `json:"metadata"`
+}
+
+// RefundResponseData defines data response for direct debit - refund
+type RefundResponseData struct {
+	Status       string                 `json:"status"`
+	RefundID     string                 `json:"refund_id"`
+	PaymentID    string                 `json:"payment_id"`
+	Amount       string                 `json:"amount"`
+	Fee          string                 `json:"fee"`
+	Currency     string                 `json:"currency"`
+	Reason       string                 `json:"reason"`
+	RefundStatus string                 `json:"refund_status"`
+	DeviceID     string                 `json:"device_id"`
+	Location     Location               `json:"location"`
+	Metadata     map[string]interface{} `json:"metadata"`
+	Date         string                 `json:"date"`
+}
+
+// RefundResponse defines response for direct debit - refund
+type RefundResponse struct {
+	Body RefundResponseData `json:"body"`
+	ErrorResponse
+}
