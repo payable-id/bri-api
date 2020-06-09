@@ -23,6 +23,7 @@ type Client struct {
 	LogLevel           int
 	Timeout            time.Duration
 	Logger             *log.Logger
+	IsProduction 	   bool
 }
 
 // NewClient : this function will always be called when the library is in use
@@ -36,6 +37,7 @@ func NewClient() Client {
 		LogLevel: 2,
 		Timeout:  10 * time.Second,
 		Logger:   log.New(os.Stderr, "", log.LstdFlags),
+		IsProduction: false,
 	}
 }
 
