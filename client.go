@@ -23,7 +23,7 @@ type Client struct {
 	LogLevel           int
 	Timeout            time.Duration
 	Logger             *log.Logger
-	IsProduction 	   bool
+	IsProduction       bool
 }
 
 // NewClient : this function will always be called when the library is in use
@@ -34,9 +34,9 @@ func NewClient() Client {
 		// 1: Errors only
 		// 2: Errors + informational (default)
 		// 3: Errors + informational + debug
-		LogLevel: 2,
-		Timeout:  10 * time.Second,
-		Logger:   log.New(os.Stderr, "", log.LstdFlags),
+		LogLevel:     2,
+		Timeout:      10 * time.Second,
+		Logger:       log.New(os.Stderr, "", log.LstdFlags),
 		IsProduction: false,
 	}
 }
@@ -69,13 +69,14 @@ func (c *Client) DirectDebitHostUseSandboxPrefix(use bool) {
 		urlChargeDetail = "/sandbox/v1/directdebit/charges/inquiry"                // POST
 		urlRefundDirectDebit = "/sandbox/v1/directdebit/refunds"                   // POST
 	} else {
-		urlCreateCardTokenOTP = "/v1/directdebit/tokens"                   // POST
-		urlCreateCardTokenOTPVerify = "/v1/directdebit/tokens"             // PATCH
-		urlDeleteCardToken = "/v1/directdebit/tokens"                      // DELETE
-		urlCreatePaymentChargeOTP = "/v1/directdebit/charges"              // POST
-		urlCreatePaymentChargeOTPVerify = "/v1/directdebit/charges/verify" // POST
-		urlChargeDetail = "/v1/directdebit/charges/inquiry"                // POST
-		urlRefundDirectDebit = "/v1/directdebit/refunds"                   // POST
+		// production path user "rt-" prefix
+		urlCreateCardTokenOTP = "/v1/rt-directdebit/tokens"                   // POST
+		urlCreateCardTokenOTPVerify = "/v1/rt-directdebit/tokens"             // PATCH
+		urlDeleteCardToken = "/v1/rt-directdebit/tokens"                      // DELETE
+		urlCreatePaymentChargeOTP = "/v1/rt-directdebit/charges"              // POST
+		urlCreatePaymentChargeOTPVerify = "/v1/rt-directdebit/charges/verify" // POST
+		urlChargeDetail = "/v1/rt-directdebit/charges/inquiry"                // POST
+		urlRefundDirectDebit = "/v1/rt-directdebit/refunds"                   // POST
 	}
 }
 
