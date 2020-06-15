@@ -6,14 +6,15 @@ import (
 	"strings"
 )
 
+// production path user "rt-" prefix
 var (
-	urlCreateCardTokenOTP           = "/v1/directdebit/tokens"          // POST
-	urlCreateCardTokenOTPVerify     = "/v1/directdebit/tokens"          // PATCH
-	urlDeleteCardToken              = "/v1/directdebit/tokens"          // DELETE
-	urlCreatePaymentChargeOTP       = "/v1/directdebit/charges"         // POST
-	urlCreatePaymentChargeOTPVerify = "/v1/directdebit/charges/verify"  // POST
-	urlChargeDetail                 = "/v1/directdebit/charges/inquiry" // POST
-	urlRefundDirectDebit            = "/v1/directdebit/refunds"         // POST
+	urlCreateCardTokenOTP           = "/v1/rt-directdebit/tokens"          // POST
+	urlCreateCardTokenOTPVerify     = "/v1/rt-directdebit/tokens"          // PATCH
+	urlDeleteCardToken              = "/v1/rt-directdebit/tokens"          // DELETE
+	urlCreatePaymentChargeOTP       = "/v1/rt-directdebit/charges"         // POST
+	urlCreatePaymentChargeOTPVerify = "/v1/rt-directdebit/charges/verify"  // POST
+	urlChargeDetail                 = "/v1/rt-directdebit/charges/inquiry" // POST
+	urlRefundDirectDebit            = "/v1/rt-directdebit/refunds"         // POST
 )
 
 // CreateCardTokenOTP verifies that the information provided by the customers matches the bank data.
@@ -33,7 +34,7 @@ func (g *CoreGateway) CreateCardTokenOTP(token string, req CardTokenOTPRequest) 
 		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
 	}
-	
+
 	if !g.Client.IsProduction {
 		headers["X-BRI-Api-Key"] = g.Client.APIKey
 	}
@@ -150,7 +151,7 @@ func (g *CoreGateway) GetChargeDetail(token string, req ChargeDetailRequest) (re
 		"X-BRI-Signature": signature,
 		"Content-Type":    "application/json",
 	}
-	
+
 	if !g.Client.IsProduction {
 		headers["X-BRI-Api-Key"] = g.Client.APIKey
 	}
