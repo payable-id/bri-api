@@ -35,7 +35,7 @@ func NewClient() Client {
 		// 2: Errors + informational (default)
 		// 3: Errors + informational + debug
 		LogLevel:     2,
-		Timeout:      10 * time.Second,
+		Timeout:      3 * time.Minute,
 		Logger:       log.New(os.Stderr, "", log.LstdFlags),
 		IsProduction: false,
 	}
