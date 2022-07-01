@@ -12,6 +12,7 @@ const (
 	TOKEN_PATH      = "/oauth/client_credential/accesstoken?grant_type=client_credentials"
 	VA_PATH         = "/v1/briva"
 	VA_REPORT_PATH  = "/v1/briva/report"
+	MUTATION_PATH   = "/v2.0/statement"
 	BRI_TIME_FORMAT = "2006-01-02T15:04:05.999Z"
 )
 
@@ -142,6 +143,31 @@ func (gateway *CoreGateway) DeleteVA(token string, institutionCode string, briva
 	}
 
 	err = gateway.Call(method, VA_PATH, headers, strings.NewReader(string(body)), &res, &respErr)
+
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (gateway *CoreGateway) GetMutation(token string, req GetMutationRequest) (res MutationResponse, err error) {
+	token = "Bearer " + token
+	method := "POST"
+	body, err := json.Marshal(req)
+	timestamp := getTimestamp(BRI_TIME_FORMAT)
+	signature := generateSignature(MUTATION_PATH, method, token, timestamp, string(body), gateway.Client.ClientSecret)
+	externalId := generateSha1Timestamp("mutation")
+
+	headers := map[string]string{
+		"Authorization":   token,
+		"BRI-Timestamp":   timestamp,
+		"BRI-Signature":   signature,
+		"BRI-External-Id": externalId,
+		"Content-Type":    "application/json",
+	}
+
+	err = gateway.Call(method, MUTATION_PATH, headers, strings.NewReader(string(body)), &res, nil)
 
 	if err != nil {
 		return
