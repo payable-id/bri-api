@@ -2,8 +2,10 @@ package bri
 
 import (
 	"crypto/hmac"
+	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/base64"
+	"fmt"
 	"time"
 )
 
@@ -25,4 +27,13 @@ func generateSignature(path string, method string, token string, timestamp strin
 
 	sig = base64.StdEncoding.EncodeToString(h.Sum(nil))
 	return
+}
+
+// generateSha1Timestamp will generate sha1 hash from UnixNano timestamp
+func generateSha1Timestamp(salt string) string {
+	key := fmt.Sprintf("%s-%d", salt, time.Now().UnixNano())
+
+	h := sha1.New()
+	h.Write([]byte(key))
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
