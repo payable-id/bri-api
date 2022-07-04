@@ -159,9 +159,9 @@ func (c *Client) ExecuteRequest(req *http.Request, v interface{}, vErr interface
 				err = json.Unmarshal(resBody, &vErr)
 			}
 
-			//if res.StatusCode == http.StatusOK {
-			//	return ErrPendingTransaction
-			//}
+			if res.StatusCode == http.StatusOK {
+				return ErrPendingTransaction
+			}
 			return err
 		}
 	}
