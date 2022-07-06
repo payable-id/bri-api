@@ -110,3 +110,9 @@ type RefundRequestData struct {
 	Reason    string                 `json:"reason"`
 	Metadata  map[string]interface{} `json:"metadata"`
 }
+
+type GetMutationRequest struct {
+	AccountNumber string `json:"accountNumber"`
+	StartDate     string `json:"startDate"`
+	EndDate       string `json:"endDate"`
+}

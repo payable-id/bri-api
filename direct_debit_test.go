@@ -1,21 +1,8 @@
 package bri
 
 import (
-	"crypto/sha1"
-	"fmt"
-	"time"
-
 	"github.com/stretchr/testify/assert"
 )
-
-// generateSha1Timestamp will generate sha1 hash from UnixNano timestamp
-func generateSha1Timestamp(salt string) string {
-	key := fmt.Sprintf("%s-%d", salt, time.Now().UnixNano())
-
-	h := sha1.New()
-	h.Write([]byte(key))
-	return fmt.Sprintf("%x", h.Sum(nil))
-}
 
 func (bri *BriSanguTestSuite) TestDirectDebit_01_CreateCardToken() {
 	coreGateway := CoreGateway{

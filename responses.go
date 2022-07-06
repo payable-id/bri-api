@@ -190,3 +190,20 @@ type RefundResponse struct {
 	Body RefundResponseData `json:"body"`
 	ErrorResponse
 }
+
+type MutationResponse struct {
+	ResponseCode        string         `json:"responseCode"`
+	ResponseDescription string         `json:"responseDescription"`
+	ErrDesc             string         `json:"errDesc"`
+	Data                []MutationData `json:"data"`
+}
+
+type MutationData struct {
+	TransactionTime string `json:"transactionTime"`
+	DebitAmount     string `json:"debitAmount"`
+	CreditAmount    string `json:"creditAmount"`
+	TypeAmount      string `json:"typeAmount"`
+	Remark          string `json:"remark"`
+	StartBalance    string `json:"startBalance"`
+	EndBalance      string `json:"endBalance"`
+}

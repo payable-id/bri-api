@@ -2,6 +2,7 @@ package bri
 
 import (
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -26,6 +27,9 @@ type BriSanguTestSuite struct {
 	chargeToken           string
 	paymentID             string
 	amount                string
+
+	// property for mutation
+	accNumber string
 }
 
 type credentials struct {
@@ -38,6 +42,7 @@ type credentials struct {
 	CardPan            string
 	PhoneNumber        string
 	Email              string
+	AccNumber          string
 }
 
 func TestBriSanguTestSuite(t *testing.T) {
@@ -68,6 +73,8 @@ func (bri *BriSanguTestSuite) SetupTest() {
 	bri.cardPan = cred.CardPan
 	bri.phoneNumber = cred.PhoneNumber
 	bri.email = cred.Email
+
+	bri.accNumber = cred.AccNumber
 }
 
 func (bri *BriSanguTestSuite) TestGetTokenSuccess() {
@@ -78,7 +85,7 @@ func (bri *BriSanguTestSuite) TestGetTokenSuccess() {
 	resp, err := coreGateway.GetToken()
 	containsProduct := false
 	for _, v := range resp.ProductList {
-		if strings.Contains(v, "briva") {
+		if strings.Contains(v, "briva") || strings.Contains(v, "mutasi") {
 			containsProduct = true
 			break
 		}
@@ -362,5 +369,26 @@ func (bri *BriSanguTestSuite) TestGetReportVaFailedInvalidDateRange() {
 
 	assert.Equal(bri.T(), false, resp.Status)
 	assert.Equal(bri.T(), "42", resp.ResponseCode)
+	assert.Equal(bri.T(), nil, err)
+}
+
+func (bri *BriSanguTestSuite) TestGetMutationSuccess() {
+	coreGateway := CoreGateway{
+		Client: bri.client,
+	}
+	tokenResp, err := coreGateway.GetToken()
+
+	req := GetMutationRequest{
+		AccountNumber: bri.accNumber,
+		StartDate:     "2020-12-02",
+		EndDate:       "2020-12-03",
+	}
+
+	token := tokenResp.AccessToken
+	resp, err := coreGateway.GetMutation(token, req)
+
+	log.Printf("mutation result %+v", resp)
+
+	assert.Equal(bri.T(), "0000", resp.ResponseCode)
 	assert.Equal(bri.T(), nil, err)
 }
