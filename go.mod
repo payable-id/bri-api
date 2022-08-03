@@ -1,4 +1,4 @@
-module github.com/kitabisa/sangu-bri
+module github.com/payable-id/bri-api
 
 go 1.13
 
